@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Scan Barcode</title>
+    
+</head>
+<body>
+    <div class="navbar">
+        {% if user_type == 'normal' %}
+            <a href="{{ url_for('uaccount') }}">User Account</a>
+            <a href="{{ url_for('uhome') }}">User Home</a>
+            <a href="{{ url_for('progress_report') }}">Progress Report</a>
+            <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
+        {% elif user_type == 'healthcare_professional' %}
+            <a href="{{ url_for('haccount') }}">Healthcare Account</a>
+            <a href="{{ url_for('hhome') }}">Healthcare Home</a>
+            <a href="{{ url_for('hmanage') }}">Manage Diets</a>
+        {% endif %}
+        <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
+        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="barcode-container">
+        <h1>Scan Barcode</h1>
+
+        <!-- Video feed for real-time capture -->
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+
+        <!-- Control buttons -->
+        <div id="controls">
+            <button id="openCamera">Open Camera</button>
+            <button id="closeCamera" style="display: none;">Close Camera</button>
+            <button id="capture" style="display: none;">Capture</button>
+        </div>
+
+        <!-- Form to upload captured image -->
+        <form method="POST" action="/upload_barcode" enctype="multipart/form-data" id="barcodeForm">
+            <!-- Hidden field to store the captured image -->
+            <input type="hidden" id="barcode_image" name="barcode_image">
+
+            <!-- File upload option -->
+            <div>
+                <label for="fileUpload">Or upload a barcode image:</label>
+                <input type="file" name="fileUpload" id="fileUpload" accept="image/*">
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const openCameraButton = document.getElementById('openCamera');
+        const closeCameraButton = document.getElementById('closeCamera');
+        const captureButton = document.getElementById('capture');
+        const barcodeForm = document.getElementById('barcodeForm');
+        const barcodeImageInput = document.getElementById('barcode_image');
+        let stream;
+
+        // Start the camera when "Open Camera" is clicked
+        openCameraButton.addEventListener('click', () => {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(mediaStream => {
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    openCameraButton.style.display = 'none';
+                    closeCameraButton.style.display = 'inline';
+                    captureButton.style.display = 'inline';
+                })
+                .catch(err => {
+                    console.error("Error accessing camera: ", err);
+                });
+        });
+
+        // Stop the camera when "Close Camera" is clicked
+        closeCameraButton.addEventListener('click', () => {
+            stream.getTracks().forEach(track => track.stop());
+            video.style.display = 'none';
+            openCameraButton.style.display = 'inline';
+            closeCameraButton.style.display = 'none';
+            captureButton.style.display = 'none';
+        });
+
+        // Capture the image when "Capture" is clicked
+        captureButton.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert the canvas to a data URL and store it in a hidden input field
+            const dataUrl = canvas.toDataURL('image/png');
+            barcodeImageInput.value = dataUrl;
+
+            // Stop the camera after capturing the image
+            stream.getTracks().forEach(track => track.stop());
+            video.style.display = 'none';
+            openCameraButton.style.display = 'inline';
+            closeCameraButton.style.display = 'none';
+            captureButton.style.display = 'none';
+
+            // Automatically submit the form to process the barcode
+            barcodeForm.submit();
+        });
+    </script>
+</body>
+</html>

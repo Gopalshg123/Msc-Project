@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Healthcare Management</title>
+</head>
+<body>
+    <div class="navbar">
+        {% if user_type == 'normal' %}
+            <a href="{{ url_for('uaccount') }}">User Account</a>
+            <a href="{{ url_for('uhome') }}">User Home</a>
+        {% elif user_type == 'healthcare_professional' %}
+            <a href="{{ url_for('haccount') }}">Healthcare Account</a>
+            <a href="{{ url_for('hhome') }}">Healthcare Home</a>
+            <a href="{{ url_for('hmanage') }}">Manage Diets</a>
+        {% endif %}
+        <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
+        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="manage-container">
+        <h1>Healthcare Management Dashboard</h1>
+
+        <!-- User Table -->
+        <h2>Users Opted for Professional Help</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Diseases</th>
+                    <th>Professional Help</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.diseases | join(', ') }}</td>
+                    <td>{{ user.professional_help }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_user', username=user.username) }}">Edit</a> |
+                        <a href="{{ url_for('delete_user', username=user.username) }}" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Add User Form -->
+        <h2>Add New User</h2>
+        <form action="{{ url_for('add_user') }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+
+            <label for="diseases">Diseases (comma separated):</label>
+            <input type="text" id="diseases" name="diseases" required><br>
+
+            <label for="professional_help">Opt for Professional Help:</label>
+            <select id="professional_help" name="professional_help" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select><br>
+
+            <button type="submit">Add User</button>
+        </form>
+    </div>
+</body>
+</html>

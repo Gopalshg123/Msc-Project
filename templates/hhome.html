@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Healthcare Professional Home</title>
+</head>
+<body>
+    <div class="navbar">
+        {% if user_type == 'normal' %}
+            <a href="{{ url_for('uaccount') }}">User Account</a>
+            <a href="{{ url_for('uhome') }}">User Home</a>
+        {% elif user_type == 'healthcare_professional' %}
+            <a href="{{ url_for('haccount') }}">Healthcare Account</a>
+            <a href="{{ url_for('hhome') }}">Healthcare Home</a>
+            <a href="{{ url_for('hmanage') }}">Manage Diets</a>
+        {% endif %}
+        <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
+        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="hhome-container">
+        <h1>Welcome to the Healthcare Professional Home Page</h1>
+        <p>This is the homepage for healthcare professionals.</p>
+    </div>
+</body>
+</html>

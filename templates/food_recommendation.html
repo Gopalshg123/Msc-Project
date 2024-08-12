@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Food Recommendation</title>
+</head>
+<body>
+    <div class="navbar">
+        {% if user_type == 'normal' %}
+            <a href="{{ url_for('uaccount') }}">User Account</a>
+            <a href="{{ url_for('uhome') }}">User Home</a>
+            <a href="{{ url_for('progress_report') }}">Progress Report</a>
+            <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
+        {% elif user_type == 'healthcare_professional' %}
+            <a href="{{ url_for('haccount') }}">Healthcare Account</a>
+            <a href="{{ url_for('hhome') }}">Healthcare Home</a>
+        {% endif %}
+        <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
+        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="recommend-container">
+        <h1>Food Recommendation for Jaundice</h1>
+
+        <!-- Recommendation Section -->
+        <section>
+            <h2>Recommended Foods</h2>
+            <ul>
+                <li>Carrots</li>
+                <li>Beets</li>
+                <li>Apples</li>
+                <!-- Add more recommended foods as needed -->
+            </ul>
+        </section>
+
+        <!-- Foods to Avoid Section -->
+        <section>
+            <h2>Foods to Avoid</h2>
+            <ul>
+                <li>Fried Foods</li>
+                <li>Fatty Meats</li>
+                <li>Full-Fat Dairy Products</li>
+                <li>Processed Foods</li>
+                <li>Sugary Drinks</li>
+                <!-- Add more foods to avoid as needed -->
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
