@@ -1,10 +1,14 @@
 /* Global styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
+    background-image: url('https://img.freepik.com/free-vector/healthcare-medical-science-elegant-background_1017-26358.jpg?w=1060&t=st=1723663439~exp=1723664039~hmac=0f446d6db4c523a977004283e4bb4d9255dc144df20a890b39ed1638b7806fac');
+    background-size: cover;
+    background-position: center;
     height: 100vh;
     margin: 0;
+    background-color: #f0f2f5;
 }
+
 
 
 
@@ -218,9 +222,6 @@ input[type="number"] {
 /* Style for the uhome content */
 .uhome {
     padding: 20px;
-    max-width: 800px;
-    margin: 20px auto;
-    text-align: center;
 }
 
 .uhome h1 {
@@ -232,6 +233,87 @@ input[type="number"] {
     color: #666;
     font-size: 18px;
     line-height: 1.6;
+}
+.uhome a {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.uhome a:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+.uhome .section {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.uhome .container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.uhome .container > div {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.uhome .container .left {
+    margin-right: 10px;
+}
+.uhome .container .right {
+    margin-left: 10px;
+}
+
+
+/* Style for the hhome container */
+.hhome-container{
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.hhome-container .section{
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.hhome-container .section h2 {
+    margin-top: 0;
+}
+
+.hhome-container .image-box {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.hhome-container .image-box img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.hhome-container .ad-link {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.hhome-container .ad-link:hover {
+    background-color: #0056b3;
 }
 
 
@@ -463,6 +545,46 @@ ul li::before {
 .barcode-container form button:disabled {
     background-color: #aaa;
     cursor: not-allowed;
+}
+#barcodeResult {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#barcodeResult h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+#resultText {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+#doneButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#doneButton:hover {
+    background-color: #0056b3;
 }
 
 
