@@ -49,10 +49,16 @@
             </div>
             <br>
             <label for="calorie_intake">Normal Calorie Intake:</label>
-            <input type="number" id="calorie_intake" name="calorie_intake" required>
+            <input type="number" id="calorie_intake" name="calorie_intake">
             <br>
-            <label for="additional_info">Additional Information:</label>
-            <input type="text" id="additional_info" name="additional_info">
+            <label for="water_intake">Normal Water intake (Litres):</label>
+            <input type="number" id="water_intake" name="water_intake">
+            <br>
+            <label for="user_type">User Type:</label>
+            <select id="user_type" name="user_type">
+                <option value="normal" selected>Normal</option>
+                <option value="healthcare_professional">Healthcare Professional</option>
+            </select>
             <br>
             <button type="submit">Sign Up</button>
         </form>
@@ -61,6 +67,7 @@
             <a href="{{ url_for('main') }}">Login</a>
         </div>
     </div>
+    
     
 </body>
 </html>

@@ -8,20 +8,46 @@
 </head>
 <body>
     <div class="navbar">
-        {% if user_type == 'normal' %}
+        {% if session['user_type'] == 'normal' %}
             <a href="{{ url_for('uaccount') }}">User Account</a>
             <a href="{{ url_for('uhome') }}">User Home</a>
-        {% elif user_type == 'healthcare_professional' %}
+            <a href="{{ url_for('progress_report') }}">Progress Report</a>
+            <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
+        {% elif session['user_type'] == 'healthcare_professional' %}
             <a href="{{ url_for('haccount') }}">Healthcare Account</a>
             <a href="{{ url_for('hhome') }}">Healthcare Home</a>
-            <a href="{{ url_for('hmanage') }}">Manage Diets</a>
+            <a href="{{ url_for('hmanage') }}">Professional Advice</a>
         {% endif %}
         <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
+    
     <div class="hhome-container">
         <h1>Welcome to the Healthcare Professional Home Page</h1>
-        <p>This is the homepage for healthcare professionals.</p>
+    
+        <!-- First Section: Random Info and Image -->
+        <div class="section" style="background-color: rgb(255, 240, 240);">
+            <h2>Important Updates</h2>
+            <p>Stay updated with the latest health protocols and guidelines. Remember to check the health database regularly for new information.</p>
+            <div class="image-box">
+                <img src="https://www.homeinsteadswfl.com/wp-content/uploads/2024/01/Exploring-the-Advantages-of-Beginning-Your-Healthcare-Career-as-a-Professional-Caregiver.png" alt="Healthcare Update Image">
+            </div>
+        </div>
+    
+        <!-- Second Section: Provide Recommendation Advertisement -->
+        <div class="section" style="background-color: rgb(216, 214, 252);">
+            <h2>Provide Recommendations</h2>
+            <p>Use this section to give personalized recommendations to your patients. Your insights are crucial in guiding them toward better health.</p>
+            <a href="{{ url_for('hmanage') }}" class="ad-link">Provide Recommendations</a>
+        </div>
+    
+        <!-- Third Section: Scan Code Advertisement -->
+        <div class="section" style="background-color: rgb(240, 255, 240);">
+            <h2>Scan Code</h2>
+            <p>Use the barcode scanner to track patient diets and monitor their progress efficiently.</p>
+            <a href="{{ url_for('scan_barcode') }}" class="ad-link">Scan Code</a>
+        </div>
     </div>
+    
 </body>
 </html>

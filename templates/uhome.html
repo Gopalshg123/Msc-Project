@@ -8,21 +8,53 @@
 </head>
 <body>
     <div class="navbar">
-        {% if user_type == 'normal' %}
+        {% if session['user_type'] == 'normal' %}
             <a href="{{ url_for('uaccount') }}">User Account</a>
             <a href="{{ url_for('uhome') }}">User Home</a>
             <a href="{{ url_for('progress_report') }}">Progress Report</a>
             <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
-        {% elif user_type == 'healthcare_professional' %}
+        {% elif session['user_type'] == 'healthcare_professional' %}
             <a href="{{ url_for('haccount') }}">Healthcare Account</a>
             <a href="{{ url_for('hhome') }}">Healthcare Home</a>
         {% endif %}
         <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
+    
     <div class="uhome">
-        <h1>Welcome to the User Home Page</h1>
-        <p>This is the homepage for normal users.</p>
+        <h1 style="text-align: center;">Welcome to the User Home Page</h1>
+        <p style="text-align: center;">This is the homepage for normal users.</p>
+
+        <!-- Recommendation Section -->
+        <div class="section" style="background-color: azure;">
+            <h2>Recommendation Section</h2>
+            <p>Here you can find recommendations tailored for you. Check out the latest suggestions to improve your diet and health.</p>
+            <a href="{{ url_for('food_recommendation') }}">Recommended Foods</a>
+        </div>
+
+        <!-- Progress Report Advertisement -->
+        <div class="section" style="background-color: rgb(240, 244, 255);">
+            <h2>Progress Report</h2>
+            <p>Track your progress and see how well you are doing in terms of calorie intake, water consumption, and more.</p>
+            <a href="{{ url_for('progress_report') }}">Progress Report</a>
+        </div>
+
+        <!-- User Account and Scan Barcode Feature -->
+        <div class="container" >
+            <!-- User Account Advertisement -->
+            <div class="left" style="background-color: rgb(240, 255, 244);">
+                <h2>User Account</h2>
+                <p>Manage your user account details, update your information, and view your dietary preferences.</p>
+                <a href="{{ url_for('uaccount') }}">User Account</a>
+            </div>
+
+            <!-- Scan Barcode Feature Advertisement -->
+            <div class="right" style="background-color: rgb(255, 240, 240);">
+                <h2>Scan Barcode</h2>
+                <p>Use the barcode scanner to quickly identify items for your diet plan. Easily track what you eat by scanning barcodes.</p>
+                <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

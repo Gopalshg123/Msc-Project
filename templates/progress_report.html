@@ -10,106 +10,97 @@
 </head>
 <body>
     <div class="navbar">
-        {% if user_type == 'normal' %}
+        {% if session['user_type'] == 'normal' %}
             <a href="{{ url_for('uaccount') }}">User Account</a>
             <a href="{{ url_for('uhome') }}">User Home</a>
             <a href="{{ url_for('progress_report') }}">Progress Report</a>
             <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
-        {% elif user_type == 'healthcare_professional' %}
+        {% elif session['user_type'] == 'healthcare_professional' %}
             <a href="{{ url_for('haccount') }}">Healthcare Account</a>
             <a href="{{ url_for('hhome') }}">Healthcare Home</a>
         {% endif %}
         <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
+    
     <div class="report-container">
         <h1>Progress Report</h1>
-
-        <!-- Table for Progress Report -->
+    
+        <!-- Table for User Data and Recommendations -->
         <table border="1">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Calorie Recommendations</th>
-                    <th>Calories Achieved</th>
-                    <th>Exercise Hours</th>
+                    <th>Name</th>
+                    <th>Diseases</th>
+                    <th>Calorie Intake</th>
                     <th>Water Intake (liters)</th>
-                    <th>Exercise Hours Recommended</th>
-                    <th>Water Intake Recommended</th>
+                    <th>Doctor's Recommendation</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>2024-08-01</td>
-                    <td>2000</td>
-                    <td>1800</td>
-                    <td>1.5</td>
-                    <td>2.0</td>
-                    <td>1.0</td> <!-- Example recommended exercise hours -->
-                    <td>2.5</td> <!-- Example recommended water intake -->
+                    <td>{{ user[1] }}</td> <!-- Name -->
+                    <td>{{ user[2] }}</td> <!-- Diseases -->
+                    <td>{{ user[3] }}</td> <!-- Calorie Intake -->
+                    <td>{{ user[4] }}</td> <!-- Water Intake -->
+                    <td>
+                        {% if recommendations %}
+                            {% set seen = [] %}
+                            {% for rec in recommendations %}
+                                {% if rec not in seen %}
+                                    <p>{{ rec }}</p>
+                                    {% set _ = seen.append(rec) %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            No recommendations available
+                        {% endif %}
+                    </td>
                 </tr>
-                <tr>
-                    <td>2024-08-02</td>
-                    <td>2000</td>
-                    <td>1900</td>
-                    <td>2.0</td>
-                    <td>2.5</td>
-                    <td>1.0</td> <!-- Example recommended exercise hours -->
-                    <td>2.5</td> <!-- Example recommended water intake -->
-                </tr>
-                <!-- Add more rows as needed -->
             </tbody>
         </table>
-
+    
         <!-- Charts -->
         <h2>Charts</h2>
         <div style="width: 100%; max-width: 600px;">
             <canvas id="calorieChart"></canvas>
         </div>
         <div style="width: 100%; max-width: 600px;">
-            <canvas id="exerciseChart"></canvas>
+            <canvas id="waterChart"></canvas>
         </div>
         
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            // Sample data for the charts
-            const labels = ['2024-08-01', '2024-08-02']; // Dates from the table
-
+            // Data for the charts
+            const userCalories = {{ user[3] }}; // User's calorie intake
+            const recommendedCalories = 2000;
+            const userWater = {{ user[4] }}; // User's water intake
+            const recommendedWater = 4;
+    
+            // Calorie Intake Chart
             const calorieData = {
-                labels: labels,
+                labels: ['User Intake', 'Recommended'],
                 datasets: [{
-                    label: 'Calories Achieved',
-                    data: [1800, 1900], // Data from the table
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    label: 'Calorie Intake',
+                    data: [userCalories, recommendedCalories],
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
                     borderWidth: 1
-                }, {
-                    label: 'Calorie Recommendations',
-                    data: [2000, 2000], // Data from the table
-                    type: 'line',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderWidth: 2
                 }]
             };
-
-            const exerciseData = {
-                labels: labels,
+    
+            // Water Intake Chart
+            const waterData = {
+                labels: ['User Intake', 'Recommended'],
                 datasets: [{
-                    label: 'Exercise Hours',
-                    data: [1.5, 2.0], // Data from the table
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
+                    label: 'Water Intake',
+                    data: [userWater, recommendedWater],
+                    backgroundColor: ['rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
                     borderWidth: 1
-                }, {
-                    label: 'Exercise Hours Recommended',
-                    data: [1.0, 1.0], // Data from the table
-                    type: 'line',
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                    borderWidth: 2
                 }]
             };
-
+    
             // Create Calorie Chart
             new Chart(document.getElementById('calorieChart').getContext('2d'), {
                 type: 'bar',
@@ -123,11 +114,11 @@
                     }
                 }
             });
-
-            // Create Exercise Chart
-            new Chart(document.getElementById('exerciseChart').getContext('2d'), {
+    
+            // Create Water Chart
+            new Chart(document.getElementById('waterChart').getContext('2d'), {
                 type: 'bar',
-                data: exerciseData,
+                data: waterData,
                 options: {
                     responsive: true,
                     scales: {
@@ -139,5 +130,7 @@
             });
         </script>
     </div>
+                
+    
 </body>
 </html>

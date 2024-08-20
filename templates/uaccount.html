@@ -9,18 +9,20 @@
 </head>
 <body>
     <div class="navbar">
-        {% if user_type == 'normal' %}
+        {% if session['user_type'] == 'normal' %}
             <a href="{{ url_for('uaccount') }}">User Account</a>
             <a href="{{ url_for('uhome') }}">User Home</a>
             <a href="{{ url_for('progress_report') }}">Progress Report</a>
             <a href="{{ url_for('food_recommendation') }}">Food Recommendation</a>
-        {% elif user_type == 'healthcare_professional' %}
+        {% elif session['user_type'] == 'healthcare_professional' %}
             <a href="{{ url_for('haccount') }}">Healthcare Account</a>
             <a href="{{ url_for('hhome') }}">Healthcare Home</a>
         {% endif %}
         <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
+    
+    
     <div class="uaccount-container">
         <h1>{{ user.username }}'s Account Information</h1>
         <div class="info">
@@ -36,13 +38,47 @@
             {% if user.diseases %}
                 <ul id="diseases">
                     {% for disease in user.diseases %}
-                        <li>{{ disease }}</li>
+                        <li>
+                            {{ disease }} 
+                            <!-- Button to remove disease -->
+                            <form action="{{ url_for('remove_disease') }}" method="post" style="display:inline;">
+                                <input type="hidden" name="disease" value="{{ disease }}">
+                                <button type="submit" class="remove-button">Remove</button>
+                            </form>
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}
                 <p>No diseases selected.</p>
             {% endif %}
         </div>
+        
+        <!-- Form to add more diseases -->
+        <div class="info">
+            <form action="{{ url_for('add_disease') }}" method="post">
+                <label>Select all diseases you currently have to add them:</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="new_diseases" value="jaundice">
+                        Jaundice
+                    </label>
+                    <label>
+                        <input type="checkbox" name="new_diseases" value="diabetes">
+                        Diabetes
+                    </label>
+                    <label>
+                        <input type="checkbox" name="new_diseases" value="common_cold">
+                        Common Cold
+                    </label>
+                    <label>
+                        <input type="checkbox" name="new_diseases" value="hypertension">
+                        Hypertension
+                    </label>
+                </div>
+                <button type="submit">Add Selected Diseases</button>
+            </form>
+        </div>
+        
     </div>
 </body>
 </html>
