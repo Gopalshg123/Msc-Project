@@ -29,20 +29,20 @@ def signup():
     if request.method == 'POST':
         name = request.form['name']
         password = request.form['password']
-        disease = ','.join(request.form.getlist('disease'))  #comma-seprated string selected diseases
+        diseases = ','.join(request.form.getlist('disease'))  # Comma-separated string of selected diseases
         professional_help = request.form['professional_help']
         calorie_intake = request.form['calorie_intake']
         water_intake = request.form['water_intake']
-        user_type = request.form.get('user_type', 'normal')  # Default to 'normal' if notspecified
-        
+        user_type = request.form.get('user_type', 'normal')  # Default to 'normal' if not specified
+
         conn = connect_db()
         cursor = conn.cursor()
-       
-        #Insert user data into the database
+
+        # Insert user data into the database
         cursor.execute('''
             INSERT INTO users (name, password, diseases, professional_help, calorie_intake, water_intake, user_type)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (name, password, disease, professional_help, calorie_intake, water_intake, user_type))
+        ''', (name, password, diseases, professional_help, calorie_intake, water_intake, user_type))
 
         conn.commit()
         conn.close()
@@ -57,16 +57,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+        
         conn = connect_db()
         cursor = conn.cursor()
 
-        # Retrive the user from the database
+        # Retrieve the user from the database
         cursor.execute('SELECT * FROM users WHERE name = ? AND password = ?', (username, password))
         user = cursor.fetchone()
 
         conn.close()
-        
+
         if user:
             session['username'] = user[1]  # Store username in session
             session['user_type'] = user[7]  # Store user type in session
@@ -114,9 +114,9 @@ def uaccount():
     if 'username' in session:
         username = session['username']
         user_data = get_user_data(username)
-
+        
         if user_data:
-            # Extraxt user data
+            # Extract user data
             user_info = {
                 'username': user_data[1],  # Adjust based on column order
                 'usertype': user_data[7],  # Adjust based on column order
@@ -128,7 +128,7 @@ def uaccount():
 
 @app.route('/add_disease', methods=['POST'])
 def add_disease():
-   if 'username' in session:
+    if 'username' in session:
         username = session['username']
         new_diseases = request.form.getlist('new_diseases')  # Get list of selected diseases
         
@@ -229,7 +229,7 @@ def progress_report():
         
         return render_template('progress_report.html', user=user_data, recommendations=[r[0] for r in recommendations])
     
-    return redirect(url_for('main')) 
+    return redirect(url_for('main'))
 
 
 
@@ -279,13 +279,13 @@ def food_recommendation():
 
 
 
-# Scan Barcode Page
+
 @app.route('/scan_barcode')
 def scan_barcode():
     if 'username' in session:
         return render_template('upload_barcode.html', user_type=session.get('user_type', 'normal'))
     return redirect(url_for('main'))
-# Upload Barcode Page
+
 @app.route('/upload_barcode', methods=['POST'])
 def upload_barcode():
     if request.form['barcode_image']:
