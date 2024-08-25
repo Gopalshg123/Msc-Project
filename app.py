@@ -1,12 +1,13 @@
 from PIL import Image
 import pyzbar.pyzbar as pyzbar
 import io
+import random
 import base64
 from flask import Flask, render_template, request, redirect, url_for, session
 from db import connect_db, init_db
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Needed for session management
+app.secret_key = '121212'  # Needed for session management
 
 # Initialize the database
 init_db()
@@ -126,6 +127,25 @@ def uaccount():
     
     return redirect(url_for('main'))
 
+@app.route('/haccount')
+def haccount():
+    if 'username' in session:
+        username = session['username']
+        user_data = get_user_data(username)
+        
+        if user_data:
+            # Extract user data
+            user_info = {
+                'username': user_data[1],  # Adjust based on column order
+                'usertype': user_data[7]  # Adjust based on column order
+            }
+            return render_template('haccount.html', user=user_info)
+    
+    return redirect(url_for('main'))
+
+
+
+
 @app.route('/add_disease', methods=['POST'])
 def add_disease():
     if 'username' in session:
@@ -176,24 +196,6 @@ def remove_disease():
         
         return redirect(url_for('uaccount')) 
 
-
-
-
-@app.route('/haccount')
-def haccount():
-    if 'username' in session:
-        username = session['username']
-        user_data = get_user_data(username)
-        
-        if user_data:
-            # Extract user data
-            user_info = {
-                'username': user_data[1],  # Adjust based on column order
-                'usertype': user_data[7]  # Adjust based on column order
-            }
-            return render_template('haccount.html', user=user_info)
-    
-    return redirect(url_for('main'))
 
 
 @app.route('/progress_report')
@@ -307,7 +309,12 @@ def upload_barcode():
     
     if barcodes:
         barcode_data = barcodes[0].data.decode('utf-8')
-        return f'Barcode data: {barcode_data}'
+
+        # Randomly decide "recommended" or "avoid"
+        recommendation = random.choice(['recommended', 'avoid'])
+
+        # Return both the barcode data and the recommendation
+        return f'Barcode data: {barcode_data} - {recommendation}.'
     else:
         return 'No barcode found in the image.'
 
