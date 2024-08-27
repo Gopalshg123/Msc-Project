@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="navbar">
-        {% if session ['user_type'] == 'normal' %}
+        {% if session['user_type'] == 'normal' %}
             <a href="{{ url_for('uaccount') }}">User Account</a>
             <a href="{{ url_for('uhome') }}">User Home</a>
             <a href="{{ url_for('progress_report') }}">Progress Report</a>
@@ -20,7 +20,7 @@
         <a href="{{ url_for('scan_barcode') }}">Scan Barcode</a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
-
+    
     <div class="recommend-container">
         <h1>Food Recommendations</h1>
     

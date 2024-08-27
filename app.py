@@ -395,6 +395,24 @@ def edit_user(user_id):
 
     return redirect(url_for('hmanage'))
 
+@app.route('/remove_recommendation/<int:user_id>', methods=['POST'])
+def remove_recommendation(user_id):
+    data = request.get_json()
+    recommendation = data.get('recommendation')
+    
+    conn = connect_db()
+    cursor = conn.cursor()
+    
+    # Remove the recommendation for the specified user
+    cursor.execute('''
+        DELETE FROM medical_recommendations
+        WHERE user_id = ? AND recommendations = ?
+    ''', (user_id, recommendation))
+    
+    conn.commit()
+    conn.close()
+    
+    return '', 204  # No content response
 
 
 

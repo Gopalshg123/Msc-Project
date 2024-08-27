@@ -34,7 +34,7 @@
                     <th>Diseases</th>
                     <th>Calorie Intake</th>
                     <th>Water Intake</th>
-                    <th>Recommendations</th> <!-- New Column -->
+                    <th>Recommendations</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -49,7 +49,10 @@
                         {% set user_recs = recommendations[user.id] %}
                         {% if user_recs %}
                             {% for rec in user_recs %}
-                                <p>{{ rec }}</p>
+                                <div>
+                                    <p>{{ rec }}</p>
+                                    <button onclick="removeRecommendation({{ user.id }}, '{{ rec }}')">Remove Recommendation</button>
+                                </div>
                             {% endfor %}
                         {% else %}
                             No recommendations available
@@ -90,14 +93,33 @@
         form.style.display = 'block';
     }
     
+    function removeRecommendation(userId, recommendation) {
+        if (confirm('Are you sure you want to remove this recommendation?')) {
+            fetch(`/remove_recommendation/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ recommendation: recommendation })
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();  // Reload the page or update the UI to reflect the change
+                } else {
+                    alert('Failed to remove recommendation.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred.');
+            });
+        }
+    }
+
     document.querySelectorAll('.edit-container form').forEach(function(form) {
         form.addEventListener('submit', function() {
-            // Hide the form after submission
-            form.parentElement.style.display = 'none';
+            form.parentElement.style.display = 'none';  // Hide the form after submission
         });
     });
     </script>
-                
     
 </body>
 </html>
